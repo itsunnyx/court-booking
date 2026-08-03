@@ -24,7 +24,15 @@
   </head>
 
   <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+    <% flash.each do |key, message| %>
+      <div class="toast toast-top toast-center z-50">
+        <div class="alert <%= key == 'notice' ? 'alert-success' : 'alert-error' %>">
+          <span><%= message %></span>
+        </div>
+      </div>
+    <% end %>
+    
+    <main class="w-full flex">
       <%= yield %>
     </main>
   </body>

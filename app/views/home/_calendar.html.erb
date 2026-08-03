@@ -1,0 +1,63 @@
+<section class="w-full border border-black flex flex-col bg-base-100">
+    <!-- Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-black">
+      <% if @current_date.beginning_of_month > Date.current.beginning_of_month %>
+        <%= link_to "&larr;".html_safe, root_path(date: @current_date.prev_month.beginning_of_month.to_s), class: "text-xl hover:opacity-60" %>
+      <% else %>
+        <span class="text-xl opacity-20 cursor-not-allowed">&larr;</span>
+      <% end %>
+      <div class="text-center">
+        <h2 class="text-xl font-semibold tracking-tight"><%= @current_date.strftime("%B %Y") %></h2>
+      </div>
+      <%= link_to "&rarr;".html_safe, root_path(date: @current_date.next_month.beginning_of_month.to_s), class: "text-xl hover:opacity-60" %>
+    </div>
+
+    <!-- Weekday Labels -->
+    <div class="grid grid-cols-7 border-b border-black text-xs uppercase tracking-wider font-medium">
+      <% %w[Sun Mon Tue Wed Thu Fri Sat].each_with_index do |day, i| %>
+        <div class="p-2 text-center <%= i < 6 ? 'border-r border-black' : '' %>"><%= day %></div>
+      <% end %>
+    </div>
+
+    <!-- Calendar Grid -->
+    <div class="grid flex-1 grid-cols-7 auto-rows-[6rem]">
+      <% @calendar_days.each_with_index do |date, index| %>
+        <%
+          classes = ["p-2", "relative", "calendar-day-#{date.strftime('%Y-%m-%d')}"]
+          classes << "border-r border-black" unless date.saturday?
+          classes << "border-b border-black" if index < (@calendar_days.length - 7)
+          classes << "bg-gray-50 text-gray-400" if date.month != @current_date.month
+        %>
+        <% if date >= Date.current %>
+          <%= link_to root_path(date: date.to_s), class: classes.join(' ') + " hover:bg-base-200 transition-colors block cursor-pointer" do %>
+            <div class="flex flex-col h-full">
+              <div class="flex justify-between items-start">
+                <% if date == @current_date %>
+                  <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-black text-white font-bold">
+                    <%= date.day %>
+                  </span>
+                <% else %>
+                  <span class="font-medium text-base-content"><%= date.day %></span>
+                <% end %>
+              </div>
+              
+              <% count = @user_bookings_count_by_date[date] %>
+              <% if count && count > 0 %>
+                <div class="mt-auto mb-1">
+                  <span class="badge badge-primary badge-sm text-[10px]"><%= pluralize(count, 'booking') %></span>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="<%= classes.join(' ') %> opacity-60">
+            <div class="flex flex-col h-full">
+              <div class="flex justify-between items-start">
+                <span class="text-base-content/50"><%= date.day %></span>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+</section>

@@ -1,1 +1,10 @@
 @import "tailwindcss";
+@plugin "daisyui";
+
+@layer components {
+  .btn {
+    font-family: inherit;
+    font-weight: normal;
+    text-transform: none;
+  }
+}

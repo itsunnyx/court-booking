@@ -1,0 +1,46 @@
+    <div class="card bg-base-100 mt-8">
+      <div class="card-body p-0">
+        <div class="overflow-x-auto w-full">
+          <table class="table table-zebra table-lg w-full">
+            <!-- head -->
+            <thead class="bg-base-300 text-base-content">
+              <tr>
+                <th class="">Court</th>
+                <th>Time</th>
+                <th class="">Availability</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @courts.each do |court| %>
+                <% @hours.each do |hour| %>
+                  <% booking = @bookings_by_court_and_hour[[court.id, hour]] %>
+                  <tr class="hover">
+                    <td>
+                      <div class="font-bold text-lg"><%= court.name %></div>
+                    </td>
+                    <td>
+                      <div class="badge-lg font-mono p-4">
+                        <%= format('%02d:00-%02d:00', hour, hour + 1) %>
+                      </div>
+                    </td>
+                    <td>
+                      <% if booking %>
+                        <div class="flex items-center space-x-4">
+                          <% if booking.user == current_user %>
+                            <%= link_to "Cancel Booking", cancel_booking_path(booking), class: "btn btn-outline btn-error btn-sm" %>
+                          <% else %>
+                            <span class="font-semibold text-error text-sm">Already booked</span>
+                          <% end %>
+                        </div>
+                      <% else %>
+                        <%= link_to "Book Now", new_booking_path(court_id: court.id, date: @current_date.to_s, hour: hour), class: "btn btn-success btn-sm" %>
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
