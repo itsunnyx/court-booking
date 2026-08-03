@@ -22,3 +22,24 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+## Keycloak for local development
+
+Start Keycloak and its PostgreSQL database:
+
+```sh
+docker compose up -d keycloak
+```
+
+Open the Admin Console at <http://localhost:8080>. The local defaults are
+`admin`/`admin`. Override all development credentials when needed:
+
+```sh
+KEYCLOAK_ADMIN_USERNAME=admin \
+KEYCLOAK_ADMIN_PASSWORD=change-me \
+KEYCLOAK_DB_PASSWORD=change-me \
+docker compose up -d keycloak
+```
+
+The Compose service uses Keycloak's `start-dev` mode and must not be used as a
+production deployment configuration.
