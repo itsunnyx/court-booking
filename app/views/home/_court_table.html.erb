@@ -39,7 +39,7 @@
                           <% if current_user && booking.user_id == current_user.id %>
                             <%= link_to "Cancel Booking", cancel_booking_path(booking), class: "btn btn-outline btn-error btn-sm" %>
                           <% else %>
-                            <span class="font-semibold text-error text-sm">Already booked</span>
+                            <span class="font-semibold text-neutral-400 text-sm">Already booked</span>
                           <% end %>
                         </div>
                       <% else %>
