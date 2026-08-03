@@ -16,6 +16,11 @@ class BookingsController < ApplicationController
       return
     end
 
+    if Booking.exists?(court_id: @booking.court_id, time: @booking.time)
+      redirect_to root_path, alert: "Court is already booked."
+      return
+    end
+
     if current_user.credit < 500
       redirect_to root_path, alert: "Insufficient credits. You need 500 credits to make a booking."
       return
@@ -23,7 +28,7 @@ class BookingsController < ApplicationController
 
     if @booking.save
       current_user.update(credit: current_user.credit - 500)
-      redirect_to root_path, notice: "Booking was successfully created."
+      redirect_to root_path(date: @booking.time.to_date), notice: "Booking was successfully created. 500 credits deducted."
     else
       @court = @booking.court
       render :new, status: :unprocessable_entity
@@ -41,10 +46,10 @@ class BookingsController < ApplicationController
     
     if time_until_booking > 1.hour
       current_user.update(credit: current_user.credit + 500)
-      notice = "Booking was successfully cancelled and 500 credits were refunded."
+      notice = "Booking was successfully cancelled and 500 credits were refunded to your wallet."
     else
       current_user.update(credit: current_user.credit + 250)
-      notice = "Booking was cancelled. 250 credits were refunded (50% penalty for late cancellation)."
+      notice = "Booking was cancelled. 250 credits were refunded to your wallet (50% penalty)."
     end
     
     @booking.destroy

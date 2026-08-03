@@ -4,12 +4,13 @@ require 'rails_helper'
 #
 # Table name: bookings
 #
-#  id         :bigint           not null, primary key
-#  time       :datetime
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  court_id   :bigint           not null
-#  user_id    :bigint           not null
+#  id                       :bigint           not null, primary key
+#  time                     :datetime
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  court_id                 :bigint           not null
+#  stripe_payment_intent_id :string
+#  user_id                  :bigint           not null
 #
 # Indexes
 #

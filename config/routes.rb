@@ -9,15 +9,19 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  resources :bookings do
+  resources :bookings, only: [:new, :create, :destroy] do
     member do
       get :cancel
+    end
+    collection do
+      get :payment_success
     end
   end
 
   resources :users, only: [] do
     collection do
       post :add_credit
+      get :payment_success
     end
   end
 

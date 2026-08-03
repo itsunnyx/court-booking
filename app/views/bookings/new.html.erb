@@ -9,7 +9,7 @@
         <p class="text-lg"><span class="font-semibold text-base-content/70">Time:</span> <%= @booking.time.strftime("%I:%M %p") %> - <%= (@booking.time + 1.hour).strftime("%I:%M %p") %></p>
       </div>
 
-      <%= form_with model: @booking, class: "space-y-4" do |f| %>
+      <%= form_with model: @booking, class: "space-y-4", data: { turbo: false } do |f| %>
         <%= f.hidden_field :court_id %>
         <%= f.hidden_field :time %>
         
