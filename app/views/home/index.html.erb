@@ -2,7 +2,7 @@
   <div class="max-w-7xl w-full flex flex-col gap-8">
     <div class="flex items-center justify-between mb-8">
       <div class="flex items-center space-x-3">
-        <img src="/tennis-racket.png" alt="Tennis Racket" class="w-10 h-10 object-contain">
+        <img src="/tennis-racket.png" alt="Tennis Racket" class="w-10 h-10 object-contain animate-bounce duration-1000">
         <h1 class="text-4xl font-bold text-base-content">ODT Booking</h1>
       </div>
       <div class="flex items-center space-x-4">
@@ -18,7 +18,7 @@
           <% else %>
             <button class="btn btn-primary btn-sm" onclick="add_credit_modal.showModal()">Add Credit</button>
           <% end %>
-          <%= link_to "Logout", logout_path, data: { turbo_method: :delete }, class: "btn btn-ghost btn-sm" %>
+          <%= button_to "Logout", logout_path, method: :delete, data: { turbo: false }, class: "btn btn-ghost btn-sm" %>
         <% else %>
           <%= form_with url: "/auth/keycloak", method: :post, local: true, data: { turbo: false } do |f| %>
             <%= f.submit "Login", class: "btn btn-primary btn-sm" %>

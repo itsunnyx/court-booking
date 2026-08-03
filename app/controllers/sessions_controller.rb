@@ -28,14 +28,28 @@ class SessionsController < ApplicationController
         u.credit = 0
       end
       session[:user_id] = user.id
+      session[:id_token] = auth.credentials&.id_token
     end
 
     redirect_to root_path, notice: "Successfully logged in via Keycloak"
   end
 
   def destroy
+    id_token = session[:id_token]
     reset_session
-    redirect_to root_path, notice: "Logged out"
+    
+    if id_token.present?
+      logout_url = URI.parse("#{ENV['KEYCLOAK_ISSUER']}/protocol/openid-connect/logout")
+      logout_url.query = URI.encode_www_form(
+        post_logout_redirect_uri: ENV.fetch('KEYCLOAK_POST_LOGOUT_REDIRECT_URI', 'http://localhost:3000/sign_in'),
+        client_id: ENV['KEYCLOAK_CLIENT_ID']
+      )
+      # Modern Keycloak prefers id_token_hint, but we also pass client_id just in case
+      logout_url.query += "&id_token_hint=#{id_token}" if id_token
+      redirect_to logout_url.to_s, allow_other_host: true
+    else
+      redirect_to root_path, notice: "Logged out locally"
+    end
   end
 
   def failure

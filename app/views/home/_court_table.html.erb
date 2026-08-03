@@ -7,6 +7,7 @@
               <tr>
                 <th class="">Court</th>
                 <th>Time</th>
+                <th>Price</th>
                 <th class="">Availability</th>
               </tr>
             </thead>
@@ -22,6 +23,9 @@
                       <div class="badge-lg font-mono p-4">
                         <%= format('%02d:00-%02d:00', hour, hour + 1) %>
                       </div>
+                    </td>
+                    <td>
+                      <span class="font-semibold">500 Credits</span>
                     </td>
                     <td>
                       <% if @deactivated_court_ids.include?(court.id) %>
@@ -44,7 +48,11 @@
                         </div>
                       <% else %>
                         <% if current_user %>
-                          <%= link_to "Book Now", new_booking_path(court_id: court.id, date: @current_date.to_s, hour: hour), class: "btn btn-success btn-sm" %>
+                          <% if is_admin? %>
+                            <span class="text-sm text-neutral-500 font-semibold">Available</span>
+                          <% else %>
+                            <%= link_to "Book Now", new_booking_path(court_id: court.id, date: @current_date.to_s, hour: hour), class: "btn btn-success btn-sm" %>
+                          <% end %>
                         <% else %>
                           <span class="text-sm">Login to book</span>
                         <% end %>
