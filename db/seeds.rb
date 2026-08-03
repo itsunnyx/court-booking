@@ -16,9 +16,7 @@ users = [
 
 puts "Creating Courts..."
 courts = [
-  Court.create!(name: "Court 1"),
-  Court.create!(name: "Court 2"),
-  Court.create!(name: "Court 3"),
+  Court.create!(name: "Court 1")
 ]
 
 puts "Creating Bookings..."

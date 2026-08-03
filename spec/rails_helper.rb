@@ -64,9 +64,30 @@ RSpec.configure do |config|
   #
   # To enable this behaviour uncomment the line below.
   # config.infer_spec_type_from_file_location!
+  config.infer_spec_type_from_file_location!
 
   # Filter lines from Rails gems in backtraces.
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  config.before(:each, type: :system) do
+    OmniAuth.config.test_mode = true
+    OmniAuth.config.mock_auth[:keycloak] = OmniAuth::AuthHash.new({
+      provider: 'keycloak',
+      uid: '123545',
+      info: {
+        name: 'Test User',
+        email: 'test@example.com'
+      },
+      extra: {
+        raw_info: {
+          realm_access: {
+            roles: []
+          }
+        }
+      }
+    })
+    Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:keycloak]
+  end
 end

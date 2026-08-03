@@ -9,6 +9,21 @@
         <p class="text-lg"><span class="font-semibold text-base-content/70">Time:</span> <%= @booking.time.strftime("%I:%M %p") %> - <%= (@booking.time + 1.hour).strftime("%I:%M %p") %></p>
       </div>
 
+      <% if @booking.time - Time.zone.now > 1.hour %>
+        <div class="alert alert-success mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          <span><strong>Refund:</strong> 500 Credits</span>
+        </div>
+      <% else %>
+        <div class="alert alert-warning mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+          <div>
+            <h3 class="font-bold">Refund: 250 Credits</h3>
+            <div class="text-xs">50% penalty applied for late cancellation (< 1 hour)</div>
+          </div>
+        </div>
+      <% end %>
+
       <%= form_with model: @booking, method: :delete, class: "space-y-4" do |f| %>
         <div class="card-actions justify-end mt-4">
           <%= link_to "Go Back", root_path, class: "btn btn-ghost" %>

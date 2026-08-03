@@ -10,6 +10,7 @@ RSpec.describe 'Home page', type: :system do
     Booking.create!(user: user, court: court, time: booking_time)
     
     visit root_path
+      click_button 'Login'
     
     expect(page).to have_content('ODT Booking')
     expect(page).to have_content('Test Court 1')
@@ -34,6 +35,7 @@ RSpec.describe 'Home page', type: :system do
     Booking.create!(user: user, court: court, time: booking_time)
     
     visit root_path
+      click_button 'Login'
     
     expect(page).to have_content('ODT Booking')
     expect(page).to have_content('Logged in as Test User')
@@ -47,6 +49,7 @@ RSpec.describe 'Home page', type: :system do
     Court.create!(name: "Test Court 1")
     
     visit root_path
+      click_button 'Login'
     
     tomorrow = (Time.zone.now + 1.day).to_date
     
@@ -69,6 +72,7 @@ RSpec.describe 'Home page', type: :system do
     User.create!(name: "Test User")
     
     visit root_path
+      click_button 'Login'
     
     next_month = (Time.zone.now + 1.month).beginning_of_month.to_date
     

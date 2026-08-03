@@ -6,6 +6,7 @@ RSpec.describe 'Booking flow', type: :system do
     court = Court.create!(name: "Test Court 1")
     
     visit root_path
+      click_button 'Login'
     
     # Find the first "Book Now" link and click it
     first('a', text: 'Book Now').click
@@ -30,6 +31,7 @@ RSpec.describe 'Booking flow', type: :system do
     booking = Booking.create!(user: user, court: court, time: Time.zone.now.beginning_of_day + 10.hours)
     
     visit root_path(date: Time.zone.now.to_date)
+      click_button 'Login'
     
     # We should see the booking
     expect(page).to have_content('Cancel Booking')

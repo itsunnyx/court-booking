@@ -10,7 +10,19 @@ class BookingsController < ApplicationController
 
   def create
     @booking = current_user.bookings.build(booking_params)
+    
+    if CourtDeactivation.exists?(court_id: @booking.court_id, date: @booking.time.to_date)
+      redirect_to root_path(date: @booking.time.to_date), alert: "This court is deactivated on this date."
+      return
+    end
+
+    if current_user.credit < 500
+      redirect_to root_path, alert: "Insufficient credits. You need 500 credits to make a booking."
+      return
+    end
+
     if @booking.save
+      current_user.update(credit: current_user.credit - 500)
       redirect_to root_path, notice: "Booking was successfully created."
     else
       @court = @booking.court
@@ -25,13 +37,18 @@ class BookingsController < ApplicationController
   def destroy
     @booking = current_user.bookings.find(params[:id])
     
-    # Placeholder for penalty logic if cancelled < 1 hour prior
-    # if @booking.time < Time.zone.now + 1.hour
-    #   apply_penalty
-    # end
+    time_until_booking = @booking.time - Time.zone.now
+    
+    if time_until_booking > 1.hour
+      current_user.update(credit: current_user.credit + 500)
+      notice = "Booking was successfully cancelled and 500 credits were refunded."
+    else
+      current_user.update(credit: current_user.credit + 250)
+      notice = "Booking was cancelled. 250 credits were refunded (50% penalty for late cancellation)."
+    end
     
     @booking.destroy
-    redirect_to root_path, notice: "Booking was successfully cancelled."
+    redirect_to root_path, notice: notice
   end
 
   private

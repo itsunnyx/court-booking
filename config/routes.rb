@@ -14,5 +14,26 @@ Rails.application.routes.draw do
       get :cancel
     end
   end
+
+  resources :users, only: [] do
+    collection do
+      post :add_credit
+    end
+  end
+
+  resources :courts, only: [] do
+    collection do
+      post :deactivate
+      post :reactivate
+    end
+  end
+
+  get '/auth/:provider/callback', to: 'sessions#create'
+  post '/auth/:provider/callback', to: 'sessions#create'
+  get '/auth/failure', to: 'sessions#failure'
+  delete '/logout', to: 'sessions#destroy'
+
+  get '/sign_in', to: 'home#index'
+
   root "home#index"
 end

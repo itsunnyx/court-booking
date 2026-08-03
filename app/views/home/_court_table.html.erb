@@ -24,16 +24,30 @@
                       </div>
                     </td>
                     <td>
-                      <% if booking %>
+                      <% if @deactivated_court_ids.include?(court.id) %>
+                        <% if is_admin? %>
+                          <%= form_with url: reactivate_courts_path, method: :post, local: true do |f| %>
+                            <%= f.hidden_field :court_id, value: court.id %>
+                            <%= f.hidden_field :date, value: @current_date.to_s %>
+                            <%= f.submit "Reactivate", class: "btn btn-outline btn-warning btn-sm" %>
+                          <% end %>
+                        <% else %>
+                          <span class="font-semibold text-warning text-sm">Deactivated</span>
+                        <% end %>
+                      <% elsif booking %>
                         <div class="flex items-center space-x-4">
-                          <% if booking.user == current_user %>
+                          <% if current_user && booking.user_id == current_user.id %>
                             <%= link_to "Cancel Booking", cancel_booking_path(booking), class: "btn btn-outline btn-error btn-sm" %>
                           <% else %>
                             <span class="font-semibold text-error text-sm">Already booked</span>
                           <% end %>
                         </div>
                       <% else %>
-                        <%= link_to "Book Now", new_booking_path(court_id: court.id, date: @current_date.to_s, hour: hour), class: "btn btn-success btn-sm" %>
+                        <% if current_user %>
+                          <%= link_to "Book Now", new_booking_path(court_id: court.id, date: @current_date.to_s, hour: hour), class: "btn btn-success btn-sm" %>
+                        <% else %>
+                          <span class="text-sm">Login to book</span>
+                        <% end %>
                       <% end %>
                     </td>
                   </tr>
