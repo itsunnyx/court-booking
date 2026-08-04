@@ -6,8 +6,8 @@
       <div class="mb-6 space-y-2">
         <p class="text-lg"><span class="font-semibold text-base-content/70">Court:</span> <%= @booking.court.name %></p>
         <p class="text-lg"><span class="font-semibold text-base-content/70">Date:</span> <%= @booking.time.strftime("%A, %b %d, %Y") %></p>
-        <p class="text-lg"><span class="font-semibold text-base-content/70">Time:</span> <%= @booking.time.strftime("%I:%M %p") %> - <%= (@booking.time + 1.hour).strftime("%I:%M %p") %></p>
-      </div>
+<p class="text-lg"><span class="font-semibold text-base-content/70">Time:</span> <%= @booking.time.strftime("%H:%M") %> - <%= (@booking.
+  time + 1.hour).strftime("%H:%M") %></p>      </div>
 
       <% if @booking.time - Time.zone.now > 1.hour %>
         <div class="alert alert-success mb-6">
