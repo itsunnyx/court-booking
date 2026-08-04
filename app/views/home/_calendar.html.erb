@@ -2,14 +2,14 @@
     <!-- Header -->
     <div class="flex items-center justify-between px-6 py-4 border-b border-black">
       <% if @current_date.beginning_of_month > Date.current.beginning_of_month %>
-        <%= link_to "&larr;".html_safe, root_path(date: @current_date.prev_month.beginning_of_month.to_s), class: "text-xl hover:opacity-60" %>
+        <%= link_to "&larr;".html_safe, root_path(date: @current_date.prev_month.beginning_of_month.to_s, court_id: @selected_court&.id), class: "text-xl hover:opacity-60" %>
       <% else %>
         <span class="text-xl opacity-20 cursor-not-allowed">&larr;</span>
       <% end %>
       <div class="text-center">
         <h2 class="text-xl font-semibold tracking-tight"><%= @current_date.strftime("%B %Y") %></h2>
       </div>
-      <%= link_to "&rarr;".html_safe, root_path(date: @current_date.next_month.beginning_of_month.to_s), class: "text-xl hover:opacity-60" %>
+      <%= link_to "&rarr;".html_safe, root_path(date: @current_date.next_month.beginning_of_month.to_s, court_id: @selected_court&.id), class: "text-xl hover:opacity-60" %>
     </div>
 
     <!-- Weekday Labels -->
@@ -29,7 +29,7 @@
           classes << "bg-gray-50 text-gray-400" if date.month != @current_date.month
         %>
         <% if date >= Date.current %>
-          <%= link_to root_path(date: date.to_s), class: classes.join(' ') + " hover:bg-base-200 transition-colors block cursor-pointer" do %>
+          <%= link_to root_path(date: date.to_s, court_id: @selected_court&.id), class: classes.join(' ') + " hover:bg-base-200 transition-colors block cursor-pointer" do %>
             <div class="flex flex-col h-full">
               <div class="flex justify-between items-start">
                 <% if date == @current_date %>

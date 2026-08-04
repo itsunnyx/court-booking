@@ -12,23 +12,31 @@ class BookingsController < ApplicationController
     @booking = current_user.bookings.build(booking_params)
     
     if CourtDeactivation.exists?(court_id: @booking.court_id, date: @booking.time.to_date)
-      redirect_to root_path(date: @booking.time.to_date), alert: "This court is deactivated on this date."
+      redirect_to root_path(date: @booking.time.to_date, court_id: @booking.court_id), alert: "This court is deactivated on this date."
       return
     end
 
     if Booking.exists?(court_id: @booking.court_id, time: @booking.time)
-      redirect_to root_path, alert: "Court is already booked."
+      redirect_to root_path(date: @booking.time.to_date, court_id: @booking.court_id), alert: "Court is already booked."
+      return
+    end
+
+    if current_user.bookings.exists?(
+         court_id: @booking.court_id,
+         time: @booking.time.beginning_of_day..@booking.time.end_of_day
+       )
+      redirect_to root_path(date: @booking.time.to_date, court_id: @booking.court_id), alert: "You've already booked this court on this date."
       return
     end
 
     if current_user.credit < 500
-      redirect_to root_path, alert: "Insufficient credits. You need 500 credits to make a booking."
+      redirect_to root_path(date: @booking.time.to_date, court_id: @booking.court_id), alert: "Insufficient credits. You need 500 credits to make a booking."
       return
     end
 
     if @booking.save
       current_user.update(credit: current_user.credit - 500)
-      redirect_to root_path(date: @booking.time.to_date), notice: "Booking was successfully created. 500 credits deducted."
+      redirect_to root_path(date: @booking.time.to_date, court_id: @booking.court_id), notice: "Booking was successfully created. 500 credits deducted."
     else
       @court = @booking.court
       render :new, status: :unprocessable_entity
@@ -53,7 +61,7 @@ class BookingsController < ApplicationController
     end
     
     @booking.destroy
-    redirect_to root_path, notice: notice
+    redirect_to root_path(date: @booking.time.to_date, court_id: @booking.court_id), notice: notice
   end
 
   private

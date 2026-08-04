@@ -1,6 +1,9 @@
 class HomeController < ApplicationController
   def index
-    @courts = Court.all
+    @all_courts = Court.order(:name)
+    @selected_court = params[:court_id].present? ? @all_courts.find_by(id: params[:court_id]) : nil
+    @selected_court ||= @all_courts.first
+    @courts = [@selected_court].compact
     # Calendar logic
     current_local_date = Time.zone.now.to_date
     @current_date = params[:date].present? ? Date.parse(params[:date]) : current_local_date
@@ -28,7 +31,7 @@ class HomeController < ApplicationController
     
     @user_bookings_count_by_date = if current_user
       current_user.bookings
-                  .where(time: start_date.beginning_of_day..end_date.end_of_day)
+                  .where(court_id: @selected_court.id, time: start_date.beginning_of_day..end_date.end_of_day)
                   .pluck(:time)
                   .map(&:to_date)
                   .tally

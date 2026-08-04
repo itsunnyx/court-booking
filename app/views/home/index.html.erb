@@ -57,7 +57,7 @@
             <label class="label">
               <span class="label-text">Select Court</span>
             </label>
-            <%= f.collection_select :court_id, @courts, :id, :name, {}, class: "select select-bordered w-full" %>
+            <%= f.collection_select :court_id, @all_courts, :id, :name, { selected: @selected_court.id }, class: "select select-bordered w-full" %>
           </div>
           <div class="form-control">
             <label class="label">
@@ -76,8 +76,14 @@
       </form>
     </dialog>
     <% end %>
+    
     <%= render 'calendar' %>
 
+    <div class="w-full flex space-x-2 mb-4">
+      <% @all_courts.each do |court| %>
+        <%= link_to court.name, root_path(date: @current_date, court_id: court.id), class: "btn flex-1 #{'btn-primary' if @selected_court == court}" %>
+      <% end %>
+    </div>
     <%= render 'court_table' %>
 
 </div>
