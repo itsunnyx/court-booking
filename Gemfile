@@ -75,4 +75,4 @@ gem "omniauth-rails_csrf_protection", "~> 2.0"
 gem "omniauth_openid_connect", "~> 0.8.0"
 gem "dotenv-rails", "~> 3.2"
 
-gem "stripe", "~> 19.4"
+gem "stripe", "~> 19.6"
